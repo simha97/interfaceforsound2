@@ -1,22 +1,28 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 function UserForm() {
   const [name, setName] = useState("");
   const [mood, setMood] = useState("");
 
+  // In your form submission handler
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const response = await fetch(
-      "https://interfaceforsound2-api.vercel.app/submit-form",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, mood }),
-      }
-    );
-    // Handle the response from the server here
+    try {
+      const response = await axios.post(
+        "https://interfaceforsound2-api.vercel.app/submit-form",
+        {
+          name, // assuming this variable holds the name input
+          mood, // assuming this variable holds the mood input
+        }
+      );
+
+      // Handle the response from the server here
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      // Handle errors here, including error.response to access server response
+    }
   };
 
   return (
