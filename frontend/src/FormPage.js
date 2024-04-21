@@ -1,39 +1,50 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import "./App.css";
 import axios from "axios";
 
-function UserForm() {
+function App() {
   const [name, setName] = useState("");
   const [mood, setMood] = useState("");
-axios.defaults.withCredentials = true;
 
-const handleSubmit = async (event) => {
-  event.preventDefault();
-  const apiUrl = "https://interfaceforsound2-api.vercel.app/submit-form"; // Use your backend API URL
-  const response = await fetch(apiUrl, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ name, mood }),
-  });
-  // Handle the response from the server here
-};
+  axios.defaults.withCredentials = true;
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    axios
+      .post("https://interfaceforsound2-api.vercel.app/submit-form", {
+        name,
+        mood,
+      })
+      .then((result) => console.log(result))
+      .catch((err) => console.log(err));
+  };
 
   return (
     <div className="App">
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Enter your name"
-          required
-        />
-        <div onChange={(e) => setMood(e.target.value)}>
-          <input type="radio" value="Happy" name="mood" /> Happy
-          <input type="radio" value="Stressed" name="mood" /> Stressed
-          <input type="radio" value="Calm" name="mood" /> Calm
-          <input type="radio" value="Sad" name="mood" /> Sad
+        <div>
+          <label>Name:</label>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Enter your name"
+            required
+          />
+        </div>
+        <div>
+          <label>Mood:</label>
+          <select
+            onChange={(e) => setMood(e.target.value)}
+            value={mood}
+            required
+          >
+            <option value="">Select your mood</option>
+            <option value="Happy">Happy</option>
+            <option value="Stressed">Stressed</option>
+            <option value="Calm">Calm</option>
+            <option value="Sad">Sad</option>
+          </select>
         </div>
         <button type="submit">Submit</button>
       </form>
@@ -41,4 +52,4 @@ const handleSubmit = async (event) => {
   );
 }
 
-export default UserForm;
+export default App;

@@ -1,62 +1,43 @@
-server.js;
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const UserModel = require("./models/User"); // Ensure you have this model
+
 const app = express();
-const port = process.env.PORT || 3001;
-
+app.use(
+  cors({
+    origin: "https://interfaceforsound2-frontend.vercel.app",
+    methods: ["POST", "GET"],
+    credentials: true,
+  })
+);
 app.use(express.json());
-// Middleware to parse JSON bodies
-const corsOptions = {
-  origin: "https://interfaceforsound2-frontend.vercel.app", // Your frontend URL
-  optionsSuccessStatus: 200, // For legacy browser support
-  methods: "GET, POST", // Allowed request methods
-  credentials: true, // To allow cookies to be sent and received
-};
 
-// Use CORS middleware for all routes
-app.use(cors(corsOptions));
+// Adjust with your MongoDB connection details
+mongoose.connect(
+  "mongodb+srv://simonhallak3:B9fQRohJNgeISs3I@soundforsleep.f573e6z.mongodb.net/?retryWrites=true&w=majority&appName=soundforsleep"
+);
 
-const dbURI =
-  "mongodb+srv://simonhallak3:B9fQRohJNgeISs3I@soundforsleep.f573e6z.mongodb.net/?retryWrites=true&w=majority&appName=soundforsleep";
-
-mongoose.connect(dbURI);
-
-// Connection success
-mongoose.connection.on("connected", () => {
-  console.log("Connected to MongoDB database");
+app.get("/", (req, res) => {
+  res.json("Backend is running.");
 });
 
-// Connection failure
-mongoose.connection.on("error", (err) => {
-  console.error("MongoDB connection error:", err);
-});
-
-// Define a Mongoose Schema for the user data
-const userSchema = new mongoose.Schema({
-  name: String,
-  mood: String,
-});
-
-// Create a Model based on the schema
-const User = mongoose.model("User", userSchema);
-
-// POST endpoint to handle form submission
-app.post("/submit-form", async (req, res) => {
+app.post("/submit-form", (req, res) => {
   const { name, mood } = req.body;
-  const newUser = new User({ name, mood });
-  try {
-    await newUser.save();
-    res.status(201).send("User added");
-  } catch (error) {
-    res.status(500).send("Error saving user: " + error.message);
-  }
+
+  UserModel.findOne({ name: name })
+    .then((user) => {
+      if (user) {
+        res.json("User already exists with this name");
+      } else {
+        UserModel.create({ name: name, mood: mood })
+          .then((result) => res.status(201).json(result))
+          .catch((err) => res.status(500).json(err));
+      }
+    })
+    .catch((err) => res.status(500).json(err));
 });
 
-app.get("/api", (req, res) => {
-  res.json({ message: "Hello from the backend!" });
-});
-
-app.listen(port, () => {
-  console.log(`Server listening at http://localhost:${port}`);
+app.listen(3001, () => {
+  console.log("Server is running on port 3001");
 });
