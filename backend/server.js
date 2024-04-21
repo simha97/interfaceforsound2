@@ -3,7 +3,16 @@ const mongoose = require("mongoose");
 
 const app = express();
 const port = 3001;
+const { createProxyMiddleware } = require("http-proxy-middleware");
 
+app.use(
+  "/api",
+  createProxyMiddleware({
+    target: "https://interfaceforsound2-api.vercel.app",
+    changeOrigin: true,
+    pathRewrite: { "^/api": "" },
+  })
+);
 // Middleware to parse JSON bodies
 app.use(express.json());
 
