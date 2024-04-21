@@ -1,13 +1,15 @@
+server.js;
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const app = express();
-const port = 3001;
+const port = process.env.PORT || 3001;
 
 app.use(express.json());
 // Middleware to parse JSON bodies
 const corsOptions = {
-  origin: ["https://interfaceforsound2-frontend.vercel.app"], // Include localhost for testing  optionsSuccessStatus: 200, // For legacy browser support
+  origin: "https://interfaceforsound2-frontend.vercel.app", // Your frontend URL
+  optionsSuccessStatus: 200, // For legacy browser support
   methods: "GET, POST", // Allowed request methods
   credentials: true, // To allow cookies to be sent and received
 };
