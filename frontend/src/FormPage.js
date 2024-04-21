@@ -4,7 +4,7 @@ import axios from "axios";
 function UserForm() {
   const [name, setName] = useState("");
   const [mood, setMood] = useState("");
-
+axios.defaults.withCredentials = true;
   // In your form submission handler
   const handleSubmit = async (event) => {
     event.preventDefault();
