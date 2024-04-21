@@ -1,20 +1,19 @@
 const express = require("express");
 const mongoose = require("mongoose");
-
+const cors = require("cors");
 const app = express();
 const port = 3001;
-const { createProxyMiddleware } = require("http-proxy-middleware");
 
-app.use(
-  "/api",
-  createProxyMiddleware({
-    target: "https://interfaceforsound2-api.vercel.app",
-    changeOrigin: true,
-    pathRewrite: { "^/api": "" },
-  })
-);
-// Middleware to parse JSON bodies
 app.use(express.json());
+// Middleware to parse JSON bodies
+const corsOptions = {
+  origin: ["https://interfaceforsound2-frontend.vercel.app"], // Include localhost for testing  optionsSuccessStatus: 200, // For legacy browser support
+  methods: "GET, POST", // Allowed request methods
+  credentials: true, // To allow cookies to be sent and received
+};
+
+// Use CORS middleware for all routes
+app.use(cors(corsOptions));
 
 const dbURI =
   "mongodb+srv://simonhallak3:B9fQRohJNgeISs3I@soundforsleep.f573e6z.mongodb.net/?retryWrites=true&w=majority&appName=soundforsleep";
