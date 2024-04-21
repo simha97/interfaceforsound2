@@ -6,7 +6,7 @@ function UserForm() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const response = await fetch("/submit-form", {
+    const response = await fetch("https://interfaceforsound2-api.vercel.app/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

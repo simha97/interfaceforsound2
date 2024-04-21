@@ -5,7 +5,14 @@ const app = express();
 const port = 3001;
 
 // Middleware to parse JSON bodies
-app.use(express.json());
+app.use(
+  cors({
+    origin: ["https://interfaceforsound2-frontend.vercel.app/form"],
+    methods: ["POST", "GET"],
+    credentials: true,
+  })
+);
+
 
 const dbURI =
   "mongodb+srv://simonhallak3:B9fQRohJNgeISs3I@soundforsleep.f573e6z.mongodb.net/?retryWrites=true&w=majority&appName=soundforsleep";
