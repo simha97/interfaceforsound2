@@ -6,13 +6,16 @@ function UserForm() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const response = await fetch("https://interfaceforsound2-api.vercel.app/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name, mood }),
-    });
+    const response = await fetch(
+      "https://interfaceforsound2-api.vercel.app/submit-form",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, mood }),
+      }
+    );
     // Handle the response from the server here
   };
 

@@ -1,13 +1,14 @@
 const express = require("express");
 const mongoose = require("mongoose");
-
+const cors = require("cors");
 const app = express();
-const port = 3001;
+const port = process.env.PORT || 3001;
 
+app.use(express.json());
 // Middleware to parse JSON bodies
 app.use(
   cors({
-    origin: ["https://interfaceforsound2-frontend.vercel.app/form"],
+    origin: ["https://interfaceforsound2-frontend.vercel.app"],
     methods: ["POST", "GET"],
     credentials: true,
   })
