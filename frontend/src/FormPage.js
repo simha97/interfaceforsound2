@@ -8,7 +8,8 @@ axios.defaults.withCredentials = true;
 
 const handleSubmit = async (event) => {
   event.preventDefault();
-  const response = await fetch("/submit-form", {
+  const apiUrl = "https://interfaceforsound2-api.vercel.app/submit-form"; // Use your backend API URL
+  const response = await fetch(apiUrl, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
