@@ -6,8 +6,15 @@ const port = process.env.PORT || 3001;
 
 app.use(express.json());
 // Middleware to parse JSON bodies
-app.use(cors()); // Allow all origins
+const corsOptions = {
+  origin: "https://interfaceforsound2-frontend.vercel.app", // Your frontend URL
+  optionsSuccessStatus: 200, // For legacy browser support
+  methods: "GET, POST", // Allowed request methods
+  credentials: true, // To allow cookies to be sent and received
+};
 
+// Use CORS middleware for all routes
+app.use(cors(corsOptions));
 
 
 const dbURI =
