@@ -4,13 +4,16 @@ const cors = require("cors");
 const UserModel = require("./models/User"); // Ensure you have this model
 
 const app = express();
-app.use(
-  cors({
-    origin: "https://interfaceforsound2-frontend.vercel.app",
-    methods: ["POST", "GET"],
-    credentials: true,
-  })
-);
+const corsOptions = {
+  origin: "https://interfaceforsound2-frontend.vercel.app",
+  methods: ["GET", "POST", "OPTIONS"], // Explicitly allowing OPTIONS method
+  credentials: true,
+  allowedHeaders: ["Content-Type", "Authorization"], // Specify allowed headers
+};
+
+// Enable preflight requests for all routes
+app.options('*', cors(corsOptions)); // Respond to preflight OPTIONS requests with the specified CORS options
+
 app.use(express.json());
 
 // Adjust with your MongoDB connection details
