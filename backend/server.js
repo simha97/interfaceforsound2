@@ -7,7 +7,7 @@ const port = process.env.PORT || 3001;
 app.use(express.json());
 // Middleware to parse JSON bodies
 const corsOptions = {
-  origin: "https://interfaceforsound2-frontend.vercel.app", // Your frontend URL
+  origin: "http://localhost:3000", // Your frontend URL
   optionsSuccessStatus: 200, // For legacy browser support
   methods: "GET, POST", // Allowed request methods
   credentials: true, // To allow cookies to be sent and received
