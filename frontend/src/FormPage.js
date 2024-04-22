@@ -11,7 +11,7 @@ function App() {
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .post("http://interfaceforsound2-api.vercel.app/submit-form", {
+      .post("https://interfaceforsound2-api.vercel.app/submit-form", {
         name,
         mood,
       })
