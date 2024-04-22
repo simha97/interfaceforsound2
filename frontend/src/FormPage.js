@@ -10,7 +10,7 @@ function UserForm() {
     event.preventDefault();
     try {
       const response = await axios.post(
-        "https://interfaceforsound2-api.vercel.app/submit-form",
+        "https://interfaceforsound2-api.vercel.app/api/submit-form",
         {
           name, // assuming this variable holds the name input
           mood, // assuming this variable holds the mood input
