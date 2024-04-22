@@ -6,7 +6,7 @@ const User = require("./models/User"); // Adjust the path as necessary
 
 const app = express();
 const corsOptions = {
-  origin: "https://interfaceforsound2-frontend.vercel.app",
+  origin: "http://interfaceforsound2-frontend.vercel.app",
   methods: ["GET", "POST", "OPTIONS"], // Explicitly allowing OPTIONS method
   credentials: true,
   allowedHeaders: ["Content-Type", "Authorization"], // Specify allowed headers
