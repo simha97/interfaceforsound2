@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const UserModel = require("./models/User"); // Ensure you have this model
+const User = require("./models/User"); // Adjust the path as necessary
 
 const app = express();
 const corsOptions = {
@@ -12,7 +13,7 @@ const corsOptions = {
 };
 
 // Enable preflight requests for all routes
-app.options('*', cors(corsOptions)); // Respond to preflight OPTIONS requests with the specified CORS options
+app.options("*", cors(corsOptions)); // Respond to preflight OPTIONS requests with the specified CORS options
 
 app.use(express.json());
 
@@ -25,20 +26,15 @@ app.get("/", (req, res) => {
   res.json("Backend is running.");
 });
 
-app.post("/submit-form", (req, res) => {
+app.post("/submit-form", async (req, res) => {
   const { name, mood } = req.body;
-
-  UserModel.findOne({ name: name })
-    .then((user) => {
-      if (user) {
-        res.json("User already exists with this name");
-      } else {
-        UserModel.create({ name: name, mood: mood })
-          .then((result) => res.status(201).json(result))
-          .catch((err) => res.status(500).json(err));
-      }
-    })
-    .catch((err) => res.status(500).json(err));
+  try {
+    const newUser = new User({ name, mood });
+    await newUser.save();
+    res.status(201).send("User added");
+  } catch (error) {
+    res.status(500).send("Error saving user: " + error.message);
+  }
 });
 
 app.listen(3001, () => {
