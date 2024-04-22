@@ -9,13 +9,10 @@ function UserForm() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post(
-        "https://interfaceforsound2-api.vercel.app/api/submit-form",
-        {
-          name, // assuming this variable holds the name input
-          mood, // assuming this variable holds the mood input
-        }
-      );
+      const response = await axios.post("http://localhost:3001/submit-form", {
+        name, // assuming this variable holds the name input
+        mood, // assuming this variable holds the mood input
+      });
 
       // Handle the response from the server here
       console.log(response.data);
