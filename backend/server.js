@@ -35,13 +35,13 @@ mongoose.connection.on("error", (err) => {
 const userSchema = new mongoose.Schema({
   name: String,
   day: String,
-  relaxation: Int16Array,
+  relaxation: Number,
   mood: String,
   selectedSound: String,
 });
 
 // Create a Model based on the schema
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model("sound", userSchema);
 
 // POST endpoint to handle form submission
 app.post("/submit-form", async (req, res) => {
