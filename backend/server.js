@@ -34,7 +34,10 @@ mongoose.connection.on("error", (err) => {
 // Define a Mongoose Schema for the user data
 const userSchema = new mongoose.Schema({
   name: String,
+  day: String,
+  relaxation: Int16Array,
   mood: String,
+  selectedSound: String,
 });
 
 // Create a Model based on the schema
