@@ -42,8 +42,8 @@ const User = mongoose.model("User", userSchema);
 
 // POST endpoint to handle form submission
 app.post("/submit-form", async (req, res) => {
-  const { name, mood } = req.body;
-  const newUser = new User({ name, mood });
+  const { name, day, relaxation, mood, selectedSound } = req.body;
+  const newUser = new User({ name, day, relaxation, mood, selectedSound });
   try {
     await newUser.save();
     res.status(201).send("User added");
