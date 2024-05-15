@@ -5,53 +5,54 @@ const app = express();
 const port = process.env.PORT || 3001;
 
 app.use(express.json());
-
+// Middleware to parse JSON bodies
 const corsOptions = {
-  origin: "https://interfaceforsound2-frontend.vercel.app",
-  optionsSuccessStatus: 200,
-  methods: "GET, POST",
-  credentials: true,
+  origin: "https://interfaceforsound2-frontend.vercel.app", // Your frontend URL
+  optionsSuccessStatus: 200, // For legacy browser support
+  methods: "GET, POST", // Allowed request methods
+  credentials: true, // To allow cookies to be sent and received
 };
 
+// Use CORS middleware for all routes
 app.use(cors(corsOptions));
 
 const dbURI =
   "mongodb+srv://simonhallak3:B9fQRohJNgeISs3I@soundforsleep.f573e6z.mongodb.net/?retryWrites=true&w=majority&appName=soundforsleep";
 
-mongoose
-  .connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log("Connected to MongoDB"))
-  .catch((err) => console.error("MongoDB connection error:", err));
+mongoose.connect(dbURI);
 
-const User = require("./models/User"); // Adjust the path as necessary
+// Connection success
+mongoose.connection.on("connected", () => {
+  console.log("Connected to MongoDB database");
+});
 
+// Connection failure
+mongoose.connection.on("error", (err) => {
+  console.error("MongoDB connection error:", err);
+});
+
+// Define a function to get or create a Mongoose model based on the user name
+const getUserModel = (name) => {
+  const userSchema = new mongoose.Schema({
+    day: String,
+    relaxation: Number,
+    mood: String,
+    selectedSound: String,
+  });
+
+  // Dynamically set the collection name based on the user's name
+  return mongoose.model(name, userSchema, name);
+};
+
+// POST endpoint to handle form submission
 app.post("/submit-form", async (req, res) => {
   const { name, day, relaxation, mood, selectedSound } = req.body;
-
+  const UserModel = getUserModel(name); // Get or create the model for this name
+  const newUser = new UserModel({ day, relaxation, mood, selectedSound });
   try {
-    console.log("Received form submission:", req.body);
-
-    const user = await User.findOne({ name });
-    console.log("User found:", user);
-
-    if (user) {
-      // User exists, add a new entry
-      user.entries.push({ day, relaxation, mood, selectedSound });
-      await user.save();
-      console.log("User data updated");
-      res.status(200).send("User data updated");
-    } else {
-      // User does not exist, create a new user
-      const newUser = new User({
-        name,
-        entries: [{ day, relaxation, mood, selectedSound }],
-      });
-      await newUser.save();
-      console.log("New user created and data added");
-      res.status(201).send("New user created and data added");
-    }
+    await newUser.save();
+    res.status(201).send("User data added");
   } catch (error) {
-    console.error("Error saving user data:", error);
     res.status(500).send("Error saving user data: " + error.message);
   }
 });
