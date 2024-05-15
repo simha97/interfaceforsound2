@@ -33,7 +33,7 @@ mongoose.connection.on("error", (err) => {
 
 // Define a function to get or create a Mongoose model based on the user name
 const getUserModel = (name) => {
-  const userSchema = new mongoose.Schema({
+  const userSchema = new mongoose.Schemaa({
     day: String,
     relaxation: Number,
     mood: String,
@@ -41,7 +41,7 @@ const getUserModel = (name) => {
   });
 
   // Dynamically set the collection name based on the user's name
-  return mongoose.model(name, userSchema, name);
+  return mongoose.models[name] || mongoose.model(name, userSchema, name);
 };
 
 // POST endpoint to handle form submission

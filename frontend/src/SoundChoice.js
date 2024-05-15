@@ -99,7 +99,7 @@ function UserForm() {
     }
   };
 
-  const filteredSounds = sounds.filter((sound) =>
+  const filteredSounds = sounds((sound) =>
     moodSoundMap[formData.mood]?.includes(sound.title)
   );
 
