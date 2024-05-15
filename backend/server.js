@@ -27,43 +27,28 @@ mongoose.connection.on("error", (err) => {
   console.error("MongoDB connection error:", err);
 });
 
-const getUserModel = (userName) => {
-  const userSchema = new mongoose.Schema({
-    name: String,
-    day: String,
-    relaxation: Number,
-    mood: String,
-    selectedSound: String,
-  });
-  return mongoose.model(userName, userSchema, userName);
-};
+const User = require("./models/User"); // Adjust the path as necessary
 
 app.post("/submit-form", async (req, res) => {
   const { name, day, relaxation, mood, selectedSound } = req.body;
 
-  // Get the user model based on the user's name
-  const User = getUserModel(name);
-
-  // Create a new user entry
-  const newUser = new User({ name, day, relaxation, mood, selectedSound });
-
   try {
-    // Check if the collection exists
-    const collections = await mongoose.connection.db
-      .listCollections({ name })
-      .toArray();
-    if (collections.length === 0) {
-      console.log(
-        `Collection for user ${name} does not exist. Creating a new collection.`
-      );
-    } else {
-      console.log(
-        `Collection for user ${name} exists. Adding data to the existing collection.`
-      );
-    }
+    const user = await User.findOne({ name });
 
-    await newUser.save();
-    res.status(201).send("User data added");
+    if (user) {
+      // User exists, add a new entry
+      user.entries.push({ day, relaxation, mood, selectedSound });
+      await user.save();
+      res.status(200).send("User data updated");
+    } else {
+      // User does not exist, create a new user
+      const newUser = new User({
+        name,
+        entries: [{ day, relaxation, mood, selectedSound }],
+      });
+      await newUser.save();
+      res.status(201).send("New user created and data added");
+    }
   } catch (error) {
     res.status(500).send("Error saving user data: " + error.message);
   }
