@@ -1,7 +1,7 @@
-// UserForm.js
 import React, { useState } from "react";
 import axios from "axios";
 import SoundCard from "./SoundCard"; // Import the SoundCard component
+import SoundPlayer from "./SoundPlayer"; // Import the new SoundPlayer component
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
@@ -27,6 +27,7 @@ function UserForm() {
       console.log(`Current Form Data at Step ${currentStep}:`, formData);
     } else {
       console.log("Final Form Data:", formData); // Print final form data to console before submission
+      setCurrentStep(currentStep + 1);
       try {
         const response = await axios.post(
           "https://interfaceforsound2.onrender.com/submit-form",
@@ -52,7 +53,7 @@ function UserForm() {
       id: 1,
       title: "Rain sound",
       imageUrl: "./rain_umbrella.jpg",
-      audioUrl: "./rain.mp3",
+      audioUrl: "./rain sound.mp3",
     },
     {
       id: 2,
@@ -64,7 +65,7 @@ function UserForm() {
       id: 3,
       title: "Singing Bowls",
       imageUrl: "/singingBowls.jpeg",
-      audioUrl: "./bowls.mp3",
+      audioUrl: "./singing bowls.mp3",
     },
     {
       id: 4,
@@ -219,6 +220,9 @@ function UserForm() {
               </div>
             </div>
           )}
+          {currentStep === 6 && formData.selectedSound && (
+            <SoundPlayer selectedSound={formData.selectedSound} />
+          )}
           <div className="d-flex justify-content-between mt-3">
             {currentStep > 1 && (
               <button
@@ -229,9 +233,11 @@ function UserForm() {
                 Back
               </button>
             )}
-            <button type="submit" className="btn btn-primary btn-lg">
-              {currentStep === 5 ? "Submit Final" : "Next Question"}
-            </button>
+            {currentStep !== 6 && (
+              <button type="submit" className="btn btn-primary btn-lg">
+                {currentStep === 5 ? "Submit Final" : "Next Question"}
+              </button>
+            )}
           </div>
         </form>
       </div>

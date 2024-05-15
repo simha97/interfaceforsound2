@@ -5,15 +5,13 @@ const app = express();
 const port = process.env.PORT || 3001;
 
 app.use(express.json());
-// Middleware to parse JSON bodies
 const corsOptions = {
-  origin: "https://interfaceforsound2-frontend.vercel.app", // Your frontend URL
-  optionsSuccessStatus: 200, // For legacy browser support
-  methods: "GET, POST", // Allowed request methods
-  credentials: true, // To allow cookies to be sent and received
+  origin: "https://interfaceforsound2-frontend.vercel.app",
+  optionsSuccessStatus: 200,
+  methods: "GET, POST",
+  credentials: true,
 };
 
-// Use CORS middleware for all routes
 app.use(cors(corsOptions));
 
 const dbURI =
@@ -21,37 +19,53 @@ const dbURI =
 
 mongoose.connect(dbURI);
 
-// Connection success
 mongoose.connection.on("connected", () => {
   console.log("Connected to MongoDB database");
 });
 
-// Connection failure
 mongoose.connection.on("error", (err) => {
   console.error("MongoDB connection error:", err);
 });
 
-// Define a Mongoose Schema for the user data
-const userSchema = new mongoose.Schema({
-  name: String,
-  day: String,
-  relaxation: Number,
-  mood: String,
-  selectedSound: String,
-});
+const getUserModel = (userName) => {
+  const userSchema = new mongoose.Schema({
+    name: String,
+    day: String,
+    relaxation: Number,
+    mood: String,
+    selectedSound: String,
+  });
+  return mongoose.model(userName, userSchema, userName);
+};
 
-// Create a Model based on the schema
-const User = mongoose.model("sound", userSchema);
-
-// POST endpoint to handle form submission
 app.post("/submit-form", async (req, res) => {
   const { name, day, relaxation, mood, selectedSound } = req.body;
+
+  // Get the user model based on the user's name
+  const User = getUserModel(name);
+
+  // Create a new user entry
   const newUser = new User({ name, day, relaxation, mood, selectedSound });
+
   try {
+    // Check if the collection exists
+    const collections = await mongoose.connection.db
+      .listCollections({ name })
+      .toArray();
+    if (collections.length === 0) {
+      console.log(
+        `Collection for user ${name} does not exist. Creating a new collection.`
+      );
+    } else {
+      console.log(
+        `Collection for user ${name} exists. Adding data to the existing collection.`
+      );
+    }
+
     await newUser.save();
-    res.status(201).send("User added");
+    res.status(201).send("User data added");
   } catch (error) {
-    res.status(500).send("Error saving user: " + error.message);
+    res.status(500).send("Error saving user data: " + error.message);
   }
 });
 
