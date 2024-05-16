@@ -37,7 +37,7 @@ const getUserModel = (name) => {
   });
 
   // Dynamically set the collection name based on the user's name
-  const collectionName = name.trim().replace(/\s+/g, "_"); // Replacing spaces with underscores for collection names
+  const collectionName = name.trim().replace(/\s+/g, "_").toLowerCase(); // Replacing spaces with underscores for collection names
   return (
     mongoose.models[collectionName] ||
     mongoose.model(collectionName, userSchema, collectionName)
