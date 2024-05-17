@@ -5,7 +5,7 @@ body, html {
   background-size: cover;
   background-color: #061822;
   min-height: 100vh; /* Ensure the background covers the full height */
-  overflow: hidden; /* Prevents scrolling that might cause shifting */
+  overflow: auto; /* Prevents scrolling that might cause shifting */
 }
 
 .App {
