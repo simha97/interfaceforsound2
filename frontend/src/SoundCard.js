@@ -28,6 +28,7 @@ function SoundCard({ sound, onTogglePlay, isPlaying }) {
         borderColor: borderColor,
         borderWidth: "7px",
         borderStyle: "solid",
+        borderRadius: "13px", // Adjust the value to make the corners more rounded
       }}
       onClick={togglePlay}
     >

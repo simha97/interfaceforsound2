@@ -1,115 +1,102 @@
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  background-color: #282c34 !important; /* Consistent dark background across the app */
-  color: #fff; /* Ensures text color is white for better readability */
+body, html {
+  max-width: 480px; /* Typical mobile screen width */
+  margin: 0 auto; /* Center the content on larger screens */
+  background: url('/public/background.png') no-repeat center center; 
+  background-size: cover;
+  background-color: #061822;
+  min-height: 100vh; /* Ensure the background covers the full height */
+  overflow: hidden; /* Prevents scrolling that might cause shifting */
 }
 
-/* This will center content in the App component and handle full height */
 .App {
-    padding-top: 5rem; /* Adjust this value as necessary */
-    display: flex;
-    justify-content: center;
-    height: 100vh;
-    font-size: 24px;
-    color: #fff;
-    background-color: #282c34 !important;
+  padding-top: 0rem; /* Adjust this value as necessary */
+  display: flex;
+  justify-content: center;
+  height: 100%; /* Full height of the container */
+  min-height: 100vh; /* Ensure it covers the full viewport height */
+  font-size: 24px;
+  color: #fff;
 }
+
+.first_4 {
+  padding-top: 20rem;
+  color: #38CAF7;
+}
+
+.message {
+  color: #38CAF7;
+  font-size: large;
+}
+
 
 /* Adjustments for smaller displays and mobile optimization */
-@media (max-width: 768px) {
-  .App {
-    justify-content: flex-start;
-    align-items: center;
-    text-align: center;
+@media (max-width: 480px) {
+  body, html {
+    background: url('/public/background.png') no-repeat center center; 
+    background-size: cover; /* Ensure the image covers the entire background */
+    min-height: 100vh; /* Ensure the background covers the full height */
   }
 }
 
-/* Styles for the header that ensure centering and adjust font size dynamically */
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-}
-
-/* Logo animations and adjustments for reduced motion preferences */
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+/* Example media query for very small devices */
+@media (max-width: 320px) {
+  h1, h2, h3, h4, h5, h6 {
+    font-size: 1em; /* Adjust as needed */
+  }
+  .container {
+    padding: 10px;
   }
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Transition effects for elements appearing */
-.sentence, .fade-in-button {
-  opacity: 0;
-  transition: opacity 2s;
-  animation: fadeIn 2s forwards;
-}
-
-.sentence.visible, .sentence.fade-in, .fade-in-button {
-  opacity: 1;
-}
-
-.sentence.fade-out {
-  opacity: 0;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-/* Styling for buttons with focus on hover and focus states */
-div.container.mt-5 .btn-outline-primary,
+/* Primary button style */
 div.container.mt-5 button.btn-primary {
-  color: #6f42c1;
-  border-color: #6f42c1;
+  background: linear-gradient(to right, #275466, #567B8A); /* Gradient from left (#275466) to right (#567B8A) */
+  color: #ffffff;
+  border-color: #5C808F;
+}
+
+/* Apply focus styles to the primary button */
+div.container.mt-5 button.btn-primary:focus {
+  border-color: #5C808F;
+  box-shadow: 0 0 0 0.2rem #5C808F;
+}
+
+div.container.mt-5 button.btn-secondary {
+  background: linear-gradient(to right, #63686a, #939090); /* Gradient from left (#275466) to right (#567B8A) */
+  color: #ffffff;
+}
+
+div.container.mt-5 button.btn-secondary:focus {
+  border-color: #5C808F;
+  box-shadow: 0 0 0 0.2rem #63686a;
+}
+
+/* Styling for radio questions */
+div.container.mt-5 .radio-outline-primary {
+  color: #38CAF7;
+  border-color: #5C808F;
   background-color: transparent;
 }
 
-div.container.mt-5 .btn-outline-primary:hover,
-div.container.mt-5 button.btn-primary:hover,
-div.container.mt-5 .btn-outline-primary:focus,
-div.container.mt-5 button.btn-primary:focus {
+div.container.mt-5 .radio-outline-primary:hover,
+div.container.mt-5 .radio-outline-primary:focus {
   color: #fff;
-  background-color: #5a34a3;
-  border-color: #5a34a3;
+  background-color: #5C808F;
+  border-color: #5C808F;
 }
 
-div.container.mt-5 .btn-check:checked + .btn-outline-primary,
-div.container.mt-5 .btn-check:active + .btn-outline-primary,
-div.container.mt-5 button.btn-primary {
-  background-color: #6f42c1;
-  border-color: #6f42c1;
+div.container.mt-5 .btn-check:checked + .radio-outline-primary,
+div.container.mt-5 .btn-check:active + .radio-outline-primary {
+  background-color: #5C808F;
+  border-color: #5C808F;
   color: #fff;
 }
 
-/* Focus state for enhanced accessibility */
-div.container.mt-5 .btn-outline-primary:focus,
-div.container.mt-5 button.btn-primary:focus {
-  box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.5);
+div.container.mt-5 .radio-outline-primary:focus {
+  box-shadow: 0 0 0 0.2rem #38CAF7;
 }
 
-/* Style adjustments for slider thumb in WebKit browsers */
+/* Style of the Slider */
 div.container.mt-5 .form-range::-webkit-slider-thumb {
-  background-color: #6f42c1 !important;
+  background-color: #38CAF7;
 }
