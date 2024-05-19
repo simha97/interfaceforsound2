@@ -16,7 +16,6 @@ function UserForm() {
     selectedSound: null,
   });
   const [errorMessage, setErrorMessage] = useState("");
-  const [fade, setFade] = useState(false); // false will mean invisible (or fading out)
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;

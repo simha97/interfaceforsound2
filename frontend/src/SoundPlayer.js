@@ -5,7 +5,7 @@ import { faPlayCircle, faPauseCircle } from "@fortawesome/free-solid-svg-icons";
 
 const SoundPlayer = ({ selectedSound }) => {
   const [isPlaying, setIsPlaying] = useState(true);
-  const [time, setTime] = useState(7200); // 2 hours in seconds
+  const [time, setTime] = useState(180); // 2 hours in seconds
   const audioRef = useRef(null);
   const intervalRef = useRef(null);
 

@@ -34,6 +34,7 @@ const getUserModel = (name) => {
     relaxation: Number,
     mood: String,
     selectedSound: String,
+    timestamp: { type: Date, default: Date.now }, // Automatically capture the current date and time
   });
 
   // Dynamically set the collection name based on the user's name
