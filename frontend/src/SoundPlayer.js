@@ -4,8 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlayCircle, faPauseCircle } from "@fortawesome/free-solid-svg-icons";
 
 const SoundPlayer = ({ selectedSound }) => {
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [time, setTime] = useState(180); // 2 hours in seconds
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [time, setTime] = useState(7200); // 3 minutes in seconds
   const audioRef = useRef(null);
   const intervalRef = useRef(null);
 
@@ -14,27 +14,39 @@ const SoundPlayer = ({ selectedSound }) => {
     "Enjoy the sound",
     "Sweet dreams",
   ];
-
   const [currentQuote, setCurrentQuote] = useState(0);
 
   useEffect(() => {
+    // Looping the audio
     if (audioRef.current) {
       audioRef.current.loop = true;
-      audioRef.current.play();
     }
+  }, []);
 
-    intervalRef.current = setInterval(() => {
+  useEffect(() => {
+    const updateTimer = () => {
       setTime((prevTime) => {
         if (prevTime <= 1) {
           clearInterval(intervalRef.current);
+          audioRef.current.pause(); // Stop the audio when time runs out
+          audioRef.current.currentTime = 0; // Reset audio to start
+          setIsPlaying(false); // Update play state
           return 0;
         }
         return prevTime - 1;
       });
-    }, 1000);
+    };
+
+    if (isPlaying) {
+      audioRef.current.play();
+      intervalRef.current = setInterval(updateTimer, 1000);
+    } else {
+      audioRef.current.pause();
+      clearInterval(intervalRef.current);
+    }
 
     return () => clearInterval(intervalRef.current);
-  }, []);
+  }, [isPlaying]);
 
   useEffect(() => {
     const quoteInterval = setInterval(() => {
@@ -44,24 +56,7 @@ const SoundPlayer = ({ selectedSound }) => {
     return () => clearInterval(quoteInterval);
   }, [quotes.length]);
 
-  const handlePausePlay = (event) => {
-    event.preventDefault(); // Prevent form submission
-
-    if (isPlaying) {
-      audioRef.current.pause();
-      clearInterval(intervalRef.current);
-    } else {
-      audioRef.current.play();
-      intervalRef.current = setInterval(() => {
-        setTime((prevTime) => {
-          if (prevTime <= 1) {
-            clearInterval(intervalRef.current);
-            return 0;
-          }
-          return prevTime - 1;
-        });
-      }, 1000);
-    }
+  const handlePausePlay = () => {
     setIsPlaying(!isPlaying);
   };
 
@@ -103,7 +98,6 @@ const SoundPlayer = ({ selectedSound }) => {
           style={{ color: isPlaying ? "#38CAF7" : "#6c757d" }}
         />
       </div>
-
       <audio ref={audioRef} src={`./${selectedSound.toLowerCase()}.mp3`} />
     </div>
   );
