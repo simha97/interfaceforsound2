@@ -6,7 +6,7 @@ import { faPlayCircle, faPauseCircle } from "@fortawesome/free-solid-svg-icons";
 const SoundPlayer = ({ selectedSound }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [startTime, setStartTime] = useState(null);
-  const [time, setTime] = useState(180); // 3 minutes in seconds
+  const [time, setTime] = useState(7200); // 2 hours in seconds
   const audioRef = useRef(null);
   const intervalRef = useRef(null);
 
@@ -28,7 +28,7 @@ const SoundPlayer = ({ selectedSound }) => {
     const updateTimer = () => {
       if (!startTime) return; // Ensure startTime is set
       const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
-      const remainingTime = 180 - elapsedTime; // Updated for 3 minutes
+      const remainingTime = 7200 - elapsedTime;
       if (remainingTime <= 0) {
         clearInterval(intervalRef.current);
         audioRef.current.pause(); // Stop the audio when time runs out
@@ -41,7 +41,7 @@ const SoundPlayer = ({ selectedSound }) => {
     };
 
     if (isPlaying) {
-      setStartTime(Date.now() - (180 - time) * 1000); // Adjust startTime based on remaining time
+      setStartTime(Date.now() - (7200 - time) * 1000); // Adjust startTime based on remaining time
       audioRef.current.play();
       intervalRef.current = setInterval(updateTimer, 1000);
     } else {
@@ -62,17 +62,18 @@ const SoundPlayer = ({ selectedSound }) => {
 
   const handlePausePlay = () => {
     if (!isPlaying) {
-      setStartTime(Date.now() - (180 - time) * 1000); // Reset startTime when resuming
+      setStartTime(Date.now() - (7200 - time) * 1000); // Reset startTime when resuming
     }
     setIsPlaying(!isPlaying);
   };
 
   const formatTime = (seconds) => {
-    const mins = Math.floor(seconds / 60);
+    const hrs = Math.floor(seconds / 3600);
+    const mins = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
-    return `${mins.toString().padStart(2, "0")}:${secs
+    return `${hrs.toString().padStart(2, "0")}:${mins
       .toString()
-      .padStart(2, "0")}`;
+      .padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   };
 
   return (
