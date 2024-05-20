@@ -5,7 +5,7 @@ import { faPlayCircle, faPauseCircle } from "@fortawesome/free-solid-svg-icons";
 
 const SoundPlayer = ({ selectedSound }) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [time, setTime] = useState(7200); // 3 minutes in seconds
+  const [time, setTime] = useState(7200); // 2 hours in seconds
   const audioRef = useRef(null);
   const intervalRef = useRef(null);
 
@@ -45,7 +45,20 @@ const SoundPlayer = ({ selectedSound }) => {
       clearInterval(intervalRef.current);
     }
 
-    return () => clearInterval(intervalRef.current);
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "hidden") {
+        clearInterval(intervalRef.current);
+      } else if (isPlaying) {
+        intervalRef.current = setInterval(updateTimer, 1000);
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      clearInterval(intervalRef.current);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, [isPlaying]);
 
   useEffect(() => {
