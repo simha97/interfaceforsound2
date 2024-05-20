@@ -153,7 +153,7 @@ function UserForm() {
           {currentStep === 3 && (
             <div className="mb-4 first_4">
               <label htmlFor="relax-slider">
-                How relax are you now (0-10):
+                How relaxed do you feel at the moment?
               </label>
               <input
                 type="range"
@@ -238,13 +238,15 @@ function UserForm() {
               </button>
             )}
             {currentStep === 6 && (
-              <button
-                type="button"
-                className="btn btn-primary btn-lg"
-                onClick={handleChangeSound}
-              >
-                Change Sound
-              </button>
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <button
+                  type="button"
+                  className="btn btn-primary btn-lg"
+                  onClick={handleChangeSound}
+                >
+                  Change Sound
+                </button>
+              </div>
             )}
             {currentStep !== 6 && (
               <button type="submit" className="btn btn-primary btn-lg">

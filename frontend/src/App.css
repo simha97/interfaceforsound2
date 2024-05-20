@@ -36,6 +36,7 @@ body, html {
     background-size: cover; /* Ensure the image covers the entire background */
     min-height: 100vh; /* Ensure the background covers the full height */
   }
+  
 }
 
 /* Example media query for very small devices */
@@ -46,6 +47,7 @@ body, html {
   .container {
     padding: 10px;
   }
+  
 }
 
 /* Primary button style */
