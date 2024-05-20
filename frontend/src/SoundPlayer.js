@@ -5,7 +5,8 @@ import { faPlayCircle, faPauseCircle } from "@fortawesome/free-solid-svg-icons";
 
 const SoundPlayer = ({ selectedSound }) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [time, setTime] = useState(7200); // 2 hours in seconds
+  const [startTime, setStartTime] = useState(null);
+  const [time, setTime] = useState(180); // 3 minutes in seconds
   const audioRef = useRef(null);
   const intervalRef = useRef(null);
 
@@ -25,19 +26,22 @@ const SoundPlayer = ({ selectedSound }) => {
 
   useEffect(() => {
     const updateTimer = () => {
-      setTime((prevTime) => {
-        if (prevTime <= 1) {
-          clearInterval(intervalRef.current);
-          audioRef.current.pause(); // Stop the audio when time runs out
-          audioRef.current.currentTime = 0; // Reset audio to start
-          setIsPlaying(false); // Update play state
-          return 0;
-        }
-        return prevTime - 1;
-      });
+      if (!startTime) return; // Ensure startTime is set
+      const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+      const remainingTime = 180 - elapsedTime; // Updated for 3 minutes
+      if (remainingTime <= 0) {
+        clearInterval(intervalRef.current);
+        audioRef.current.pause(); // Stop the audio when time runs out
+        audioRef.current.currentTime = 0; // Reset audio to start
+        setIsPlaying(false); // Update play state
+        setTime(0);
+      } else {
+        setTime(remainingTime);
+      }
     };
 
     if (isPlaying) {
+      setStartTime(Date.now() - (180 - time) * 1000); // Adjust startTime based on remaining time
       audioRef.current.play();
       intervalRef.current = setInterval(updateTimer, 1000);
     } else {
@@ -45,21 +49,8 @@ const SoundPlayer = ({ selectedSound }) => {
       clearInterval(intervalRef.current);
     }
 
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === "hidden") {
-        clearInterval(intervalRef.current);
-      } else if (isPlaying) {
-        intervalRef.current = setInterval(updateTimer, 1000);
-      }
-    };
-
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-
-    return () => {
-      clearInterval(intervalRef.current);
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
-  }, [isPlaying]);
+    return () => clearInterval(intervalRef.current);
+  }, [isPlaying, startTime]);
 
   useEffect(() => {
     const quoteInterval = setInterval(() => {
@@ -70,16 +61,18 @@ const SoundPlayer = ({ selectedSound }) => {
   }, [quotes.length]);
 
   const handlePausePlay = () => {
+    if (!isPlaying) {
+      setStartTime(Date.now() - (180 - time) * 1000); // Reset startTime when resuming
+    }
     setIsPlaying(!isPlaying);
   };
 
   const formatTime = (seconds) => {
-    const hrs = Math.floor(seconds / 3600);
-    const mins = Math.floor((seconds % 3600) / 60);
+    const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${hrs.toString().padStart(2, "0")}:${mins
+    return `${mins.toString().padStart(2, "0")}:${secs
       .toString()
-      .padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+      .padStart(2, "0")}`;
   };
 
   return (
